@@ -1,0 +1,43 @@
+[tools]
+go = "$GO_VERSION"
+golangci-lint = "$LINTER_VERSION"
+
+[tasks.format]
+run = [
+  "go mod tidy",
+  "go fix ./...",
+  "go fmt ./...",
+  "golangci-lint fmt",
+]
+
+[tasks.lint]
+depends = [
+  "format",
+]
+run = [
+  "out=$(go tool deadcode -test ./...) && echo \"$out\" && [ -z \"$out\" ]",
+  "go vet ./...",
+  "golangci-lint run",
+]
+
+[tasks.test]
+depends = [
+  "lint",
+]
+run = [
+  "go test -cover -race -v ./...",
+]
+
+[tasks.vuln]
+run = [
+  "go mod verify",
+  "go tool govulncheck -test ./...",
+]
+
+[tasks.ci]
+depends = [
+  "test",
+]
+run = [
+  "git diff --exit-code",
+]
