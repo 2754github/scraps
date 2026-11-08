@@ -1,0 +1,34 @@
+version: "2"
+linters:
+  default: all
+  settings:
+    depguard:
+      rules:
+        main:
+          allow:
+            - $gostd
+            - $MODULE_PATH
+  exclusions:
+    paths:
+      - _test.go
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+    - swaggo
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix($MODULE_PATH)
+        - blank
+        - dot
+        - alias
+        - localmodule
+    goimports:
+      local-prefixes:
+        - $MODULE_PATH
